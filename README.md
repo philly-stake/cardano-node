@@ -1,6 +1,10 @@
 # cardano-node
 Minimal Dockerfile for cardano-node
 
+## Disclaimer
+
+We recomment using the [official Docker image for cardano-node provided by IOHK](https://hub.docker.com/r/inputoutput/cardano-node). This Docker image is for educational purposes only. Use it in production at your own risk!
+
 ## Build
 
 ```
