@@ -68,6 +68,7 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 RUN apt-get update && apt-get install -y --no-install-recommends \
   netbase \
   libc-dev \
+  jq \
   && rm -rf /var/lib/apt/lists/*
 
 RUN groupadd -g ${GROUPID} -r ${USERNAME} \
