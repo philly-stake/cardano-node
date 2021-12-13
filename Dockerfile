@@ -1,6 +1,6 @@
-FROM debian:latest AS build
+FROM debian:stable AS build
 
-ARG VERSION="1.31.0"
+ARG VERSION="1.32.1"
 ARG GHC_VERSION="8.10.7"
 ARG CABAL_VERSION="3.6.2.0"
 
@@ -12,10 +12,11 @@ RUN apt-get update && apt-get install -y \
   git \
   libffi-dev \
   libgmp-dev \
-  libssl-dev \
-  libtinfo-dev \
-  libsystemd-dev \
   libncursesw5 \
+  libnuma-dev \
+  libssl-dev \
+  libsystemd-dev \
+  libtinfo-dev \
   libtool \
   pkg-config \
   zlib1g-dev
@@ -53,7 +54,7 @@ RUN git clone https://github.com/input-output-hk/cardano-node.git \
   && cp -p dist-newstyle/build/x86_64-linux/ghc-${GHC_VERSION}/cardano-node-${VERSION}/x/cardano-node/build/cardano-node/cardano-node /opt/bin/ \
   && cp -p dist-newstyle/build/x86_64-linux/ghc-${GHC_VERSION}/cardano-cli-${VERSION}/x/cardano-cli/build/cardano-cli/cardano-cli /opt/bin/
 
-FROM debian:bullseye-slim
+FROM debian:stable-slim
 
 ARG USERNAME="cardano"
 ARG USERID="1000"
