@@ -1,6 +1,6 @@
 FROM debian:stable AS build
 
-ARG VERSION="1.32.1"
+ARG VERSION="1.33.0"
 ARG GHC_VERSION="8.10.7"
 ARG CABAL_VERSION="3.6.2.0"
 
