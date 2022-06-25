@@ -1,6 +1,6 @@
 FROM debian:stable AS build
 
-ARG VERSION="1.34.1"
+ARG VERSION="1.35.0"
 ARG GHC_VERSION="8.10.7"
 ARG CABAL_VERSION="3.6.2.0"
 
@@ -10,15 +10,18 @@ RUN apt-get update && apt-get install -y \
   build-essential \
   curl \
   git \
+  jq \
   libffi-dev \
   libgmp-dev \
   libncursesw5 \
   libnuma-dev \
+  libsodium-dev \
   libssl-dev \
   libsystemd-dev \
   libtinfo-dev \
   libtool \
   pkg-config \
+  wget \
   zlib1g-dev
 
 WORKDIR /opt
@@ -42,6 +45,14 @@ RUN git clone https://github.com/input-output-hk/libsodium \
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 ENV PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
+RUN git clone https://github.com/bitcoin-core/secp256k1 \
+  && cd secp256k1 \
+  && git checkout ac83be33 \
+  && ./autogen.sh \
+  && ./configure --enable-module-schnorrsig --enable-experimental \
+  && make \
+  && make install
+
 RUN git clone https://github.com/input-output-hk/cardano-node.git \
   && cd cardano-node \
   && git fetch --all --recurse-submodules --tags \
@@ -61,6 +72,7 @@ ARG USERID="1000"
 ARG GROUPID="1024"
 
 COPY --from=build /usr/local/lib/libsodium.so* /usr/local/lib/
+COPY --from=build /usr/local/lib/libsecp256k1.so* /usr/local/lib/
 COPY --from=build /opt/bin/cardano-cli /usr/local/bin/
 COPY --from=build /opt/bin/cardano-node /usr/local/bin/
 
