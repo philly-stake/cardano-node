@@ -1,6 +1,6 @@
 FROM debian:stable AS build
 
-ARG VERSION="1.35.0"
+ARG VERSION="1.35.4"
 ARG GHC_VERSION="8.10.7"
 ARG CABAL_VERSION="3.6.2.0"
 
@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
   jq \
   libffi-dev \
   libgmp-dev \
+  liblmdb-dev \
   libncursesw5 \
   libnuma-dev \
   libsodium-dev \
@@ -57,9 +58,10 @@ RUN git clone https://github.com/input-output-hk/cardano-node.git \
   && cd cardano-node \
   && git fetch --all --recurse-submodules --tags \
   && git tag && git checkout tags/${VERSION} \
-  && cabal configure --with-compiler=ghc-${GHC_VERSION} \
-  && echo "package cardano-crypto-praos" >>  cabal.project.local \
-  && echo "  flags: -external-libsodium-vrf" >>  cabal.project.local \
+  && echo "with-compiler: ghc-${GHC_VERSION}" >> cabal.project.local \
+  && echo "package cardano-crypto-praos" >> cabal.project.local \
+  && echo "  flags: -external-libsodium-vrf" >> cabal.project.local \
+  && cabal update \
   && cabal build -j16 all \
   && mkdir /opt/bin/ \
   && cp -p dist-newstyle/build/x86_64-linux/ghc-${GHC_VERSION}/cardano-node-${VERSION}/x/cardano-node/build/cardano-node/cardano-node /opt/bin/ \
