@@ -1,6 +1,6 @@
 FROM debian:stable AS build
 
-ARG VERSION="1.35.7"
+ARG VERSION="8.0.0"
 ARG GHC_VERSION="8.10.7"
 ARG CABAL_VERSION="3.6.2.0"
 
@@ -38,7 +38,7 @@ RUN ghcup upgrade && \
 
 RUN git clone https://github.com/input-output-hk/libsodium \
   && cd libsodium \
-  && git checkout 66f017f1 \
+  && git checkout dbb48cce5429cb6585c9034f002568964f1ce567 \
   && ./autogen.sh \
   && ./configure \
   && make -j16 \
